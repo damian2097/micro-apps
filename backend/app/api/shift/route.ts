@@ -59,11 +59,20 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(object);
-  } catch (error) {
+  } catch (error: any) {
     console.error('[/api/shift] Error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate protocol. Please try again.' },
-      { status: 500 }
-    );
+    // Return the error message inside a valid ShiftProtocol format with 200 status
+    // so it bypasses the 500 block and displays directly in the app for debugging.
+    return NextResponse.json({
+      title: "Debug Error",
+      steps: [
+        {
+          type: "reframe",
+          title: "Error Details",
+          duration_seconds: 0,
+          instruction: error instanceof Error ? `${error.name}: ${error.message}` : String(error)
+        }
+      ]
+    }, { status: 200 });
   }
 }
