@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 object ShiftApiClient {
 
     // The live Vercel backend URL
-    private const val BASE_URL = "https://micro-apps-5chdvj0zz-cgdct97-2989s-projects.vercel.app"
+    private const val BASE_URL = "https://micro-apps-henna.vercel.app"
 
     private val json = Json {
         ignoreUnknownKeys = true
