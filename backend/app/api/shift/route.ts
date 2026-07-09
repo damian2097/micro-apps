@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     const { object } = await generateObject({
       // We pass the model string directly. Under the hood, Vercel AI SDK
       // automatically uses the Vercel OIDC token in production to resolve this.
-      model: 'google/gemini-1.5-flash',
+      model: 'google/gemini-2.5-flash-lite',
       schema: ProtocolSchema,
       system: SYSTEM_PROMPT,
       prompt: `Emotional state: "${state}"\nContext: "${description ?? state}"\n\nGenerate a targeted protocol to shift this state.`,
