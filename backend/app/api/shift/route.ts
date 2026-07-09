@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     const { object } = await generateObject({
       // The AI SDK automatically intercepts 'creator/model-name' strings
       // and routes them securely through the Vercel AI Gateway using your credits.
-      model: 'google/gemini-2.5-flash',
+      model: 'openai/gpt-5.4',
       schema: ProtocolSchema,
       system: SYSTEM_PROMPT,
       prompt: `Emotional state: "${state}"\nContext: "${description ?? state}"\n\nGenerate a targeted protocol to shift this state.`,
