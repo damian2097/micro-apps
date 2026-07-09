@@ -1,4 +1,5 @@
 import { generateObject } from 'ai';
+import { google } from '@ai-sdk/google';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -50,9 +51,9 @@ export async function POST(req: Request) {
     }
 
     const { object } = await generateObject({
-      // The AI SDK automatically intercepts 'creator/model-name' strings
-      // and routes them securely through the Vercel AI Gateway using your credits.
-      model: 'openai/gpt-5.4',
+      // We are using Google Gemini 1.5 Flash directly. 
+      // This requires the GOOGLE_GENERATIVE_AI_API_KEY environment variable.
+      model: google('gemini-1.5-flash'),
       schema: ProtocolSchema,
       system: SYSTEM_PROMPT,
       prompt: `Emotional state: "${state}"\nContext: "${description ?? state}"\n\nGenerate a targeted protocol to shift this state.`,
