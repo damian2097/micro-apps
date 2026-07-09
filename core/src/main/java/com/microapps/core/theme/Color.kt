@@ -2,22 +2,19 @@ package com.microapps.core.theme
 
 import androidx.compose.ui.graphics.Color
 
-// ── Base dark palette shared by all apps ──────────────────────────────────────
-val BaseBackground    = Color(0xFF0D0F14)
-val BaseSurface       = Color(0xFF161921)
-val BaseSurfaceVar    = Color(0xFF1E2330)
-val BaseOutline       = Color(0xFF2A2F3E)
-val BaseOnBackground  = Color(0xFFF0F0F5)
-val BaseOnSurface     = Color(0xFFDDDDE8)
-val BaseSubtle        = Color(0xFF8B8FA8)
-val BaseError         = Color(0xFFFF4D6D)
+// Cicerone Premium Light Palette
+val CiceroneBackground = Color(0xFFF2F0EA) // Warm, light beige background
+val CiceroneSurface = Color(0xFFFAF9F6) // Off-white for elevated cards
+val CiceronePrimary = Color(0xFF183D33) // Deep Forest Green
+val CiceroneAccent = Color(0xFFC85135) // Burnt Orange / Terracotta for primary actions
+val CiceroneTextPrimary = Color(0xFF1C1C1C) // Almost black, slightly warm
+val CiceroneTextSecondary = Color(0xFF4A4A4A) // Dark grey
+val CiceroneBorder = Color(0xFFE2DFD6) // Subtle border color for cards
 
-// ── Shift: electric violet ─────────────────────────────────────────────────────
-val ShiftViolet      = Color(0xFF7C3AED)
-val ShiftVioletLight = Color(0xFF9F67F5)
-val ShiftVioletDim   = Color(0xFF2D1566)
-
-// ── Future app accents (stubbed for later modules) ────────────────────────────
-val AnchorAmber  = Color(0xFFD97706)
-val CommitCyan   = Color(0xFF0EA5E9)
-val PauseSage    = Color(0xFF34D399)
+// Map the generic names to the new Cicerone palette
+val BackgroundDark = CiceroneBackground
+val SurfaceDark = CiceroneSurface
+val TextPrimary = CiceroneTextPrimary
+val TextSecondary = CiceroneTextSecondary
+val PrimaryAction = CiceroneAccent
+val CardBorder = CiceroneBorder

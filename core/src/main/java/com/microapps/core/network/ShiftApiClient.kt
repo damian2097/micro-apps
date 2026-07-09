@@ -12,8 +12,8 @@ import java.util.concurrent.TimeUnit
 
 object ShiftApiClient {
 
-    // TODO: Replace with your deployed Vercel backend URL after running `vercel deploy` in backend/
-    private const val BASE_URL = "https://micro-apps-backend.vercel.app"
+    // The live Vercel backend URL
+    private const val BASE_URL = "https://micro-apps-5chdvj0zz-cgdct97-2989s-projects.vercel.app"
 
     private val json = Json {
         ignoreUnknownKeys = true
