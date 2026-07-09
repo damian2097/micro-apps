@@ -1,5 +1,4 @@
 import { generateObject } from 'ai';
-import { createGateway } from '@ai-sdk/gateway';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -40,11 +39,6 @@ Rules:
 - Each instruction should be 2-4 sentences max.
 - Duration should be realistic: breathing = 60s, reframe = 90s, action = 60-120s.`;
 
-// Instantiate the Vercel AI Gateway provider.
-// Leaving the apiKey configuration empty allows the gateway provider to automatically
-// use the platform's VERCEL_OIDC_TOKEN in production as per Vercel's instructions.
-const gateway = createGateway();
-
 // ── Route handler ─────────────────────────────────────────────────────────────
 export async function POST(req: Request) {
   try {
@@ -56,10 +50,9 @@ export async function POST(req: Request) {
     }
 
     const { object } = await generateObject({
-      // We pass the model string wrapped in the gateway provider.
-      // This forces the request to route through Vercel AI Gateway instead of 
-      // resolving directly to the Google API endpoint.
-      model: gateway('google/gemini-2.5-flash-lite'),
+      // Using a raw string model tells the Vercel AI SDK to resolve it
+      // automatically using your Vercel AI Gateway Credits and OIDC token.
+      model: 'google/gemini-2.5-flash-lite',
       schema: ProtocolSchema,
       system: SYSTEM_PROMPT,
       prompt: `Emotional state: "${state}"\nContext: "${description ?? state}"\n\nGenerate a targeted protocol to shift this state.`,
