@@ -1,5 +1,5 @@
 import { generateObject } from 'ai';
-import { google } from '@ai-sdk/google';
+import { createGateway } from '@ai-sdk/gateway';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -40,6 +40,13 @@ Rules:
 - Each instruction should be 2-4 sentences max.
 - Duration should be realistic: breathing = 60s, reframe = 90s, action = 60-120s.`;
 
+// Create the Gateway Provider instance globally.
+// Passing apiKey explicitly overrides automatic OIDC token verification on Vercel
+// to ensure the Gateway Credit Key is used regardless of deployment context.
+const gateway = createGateway({
+  apiKey: process.env.AI_GATEWAY_API_KEY,
+});
+
 // ── Route handler ─────────────────────────────────────────────────────────────
 export async function POST(req: Request) {
   try {
@@ -51,9 +58,8 @@ export async function POST(req: Request) {
     }
 
     const { object } = await generateObject({
-      // We are using Google Gemini 1.5 Flash directly. 
-      // This requires the GOOGLE_GENERATIVE_AI_API_KEY environment variable.
-      model: google('gemini-1.5-flash'),
+      // Pass the model string to the gateway instance directly
+      model: gateway('openai/gpt-4o-mini'),
       schema: ProtocolSchema,
       system: SYSTEM_PROMPT,
       prompt: `Emotional state: "${state}"\nContext: "${description ?? state}"\n\nGenerate a targeted protocol to shift this state.`,
