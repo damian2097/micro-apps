@@ -1,4 +1,5 @@
 import { generateObject } from 'ai';
+import { createGateway } from '@ai-sdk/gateway';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -39,6 +40,11 @@ Rules:
 - Each instruction should be 2-4 sentences max.
 - Duration should be realistic: breathing = 60s, reframe = 90s, action = 60-120s.`;
 
+// Instantiate the Vercel AI Gateway provider.
+// Leaving the apiKey configuration empty allows the gateway provider to automatically
+// use the platform's VERCEL_OIDC_TOKEN in production as per Vercel's instructions.
+const gateway = createGateway();
+
 // ── Route handler ─────────────────────────────────────────────────────────────
 export async function POST(req: Request) {
   try {
@@ -50,29 +56,21 @@ export async function POST(req: Request) {
     }
 
     const { object } = await generateObject({
-      // We pass the model string directly. Under the hood, Vercel AI SDK
-      // automatically uses the Vercel OIDC token in production to resolve this.
-      model: 'google/gemini-2.5-flash-lite',
+      // We pass the model string wrapped in the gateway provider.
+      // This forces the request to route through Vercel AI Gateway instead of 
+      // resolving directly to the Google API endpoint.
+      model: gateway('google/gemini-2.5-flash-lite'),
       schema: ProtocolSchema,
       system: SYSTEM_PROMPT,
       prompt: `Emotional state: "${state}"\nContext: "${description ?? state}"\n\nGenerate a targeted protocol to shift this state.`,
     });
 
     return NextResponse.json(object);
-  } catch (error: any) {
+  } catch (error) {
     console.error('[/api/shift] Error:', error);
-    // Return the error message inside a valid ShiftProtocol format with 200 status
-    // so it bypasses the 500 block and displays directly in the app for debugging.
-    return NextResponse.json({
-      title: "Debug Error",
-      steps: [
-        {
-          type: "reframe",
-          title: "Error Details",
-          duration_seconds: 0,
-          instruction: error instanceof Error ? `${error.name}: ${error.message}` : String(error)
-        }
-      ]
-    }, { status: 200 });
+    return NextResponse.json(
+      { error: 'Failed to generate protocol. Please try again.' },
+      { status: 500 }
+    );
   }
 }
