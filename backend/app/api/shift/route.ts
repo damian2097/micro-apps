@@ -1,4 +1,5 @@
 import { generateObject } from 'ai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -49,9 +50,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'state is required' }, { status: 400 });
     }
 
+    // Configure the Google provider to route through Vercel AI Gateway
+    const google = createGoogleGenerativeAI({
+      baseURL: process.env.AI_GATEWAY_URL, // e.g. https://gateway.ai.vercel.com/v1/...
+      // The gateway will use the key stored in its own dashboard, but we pass the
+      // AI_GATEWAY_API_KEY as the auth token for the gateway itself.
+      apiKey: process.env.AI_GATEWAY_API_KEY || 'empty', 
+    });
+
     const { object } = await generateObject({
-      // AI Gateway routes this to Google Gemini 2.5 Flash using AI_GATEWAY_API_KEY
-      model: 'google/gemini-2.5-flash',
+      model: google('models/gemini-2.5-flash'),
       schema: ProtocolSchema,
       system: SYSTEM_PROMPT,
       prompt: `Emotional state: "${state}"\nContext: "${description ?? state}"\n\nGenerate a targeted protocol to shift this state.`,
